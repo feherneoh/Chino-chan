@@ -46,7 +46,7 @@ namespace Chino_chan
         public static CancellationToken CancellationToken;
         static TextReader InputStream;
         static Task DataSendTask;
-        
+
         public static void Main(string[] args)
         {
             Console.Title = "Chino-chan";
@@ -58,7 +58,7 @@ namespace Chino_chan
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) SetErrorMode(ErrorModes.SEM_NOGPFAULTERRORBOX);
                 Args = args;
-                
+
                 if (Args.Length == 1)
                 {
                     if (Args[0] == "1")
@@ -141,7 +141,7 @@ namespace Chino_chan
             {
                 await Global.Client.SetStatusAsync(UserStatus.Online);
                 await Global.Client.SetGameAsync(Global.Settings.Game);
-                
+
                 await Global.Client.DownloadUsersAsync(Global.Client.Guilds);
 
                 if (ReloadChannel != null)
@@ -170,62 +170,60 @@ namespace Chino_chan
             var Trim = Lower.Trim();
             var Parameter = "";
             var Index = Command.IndexOf(" ");
-            
+
             if (Index >= 0)
             {
                 Lower = Lower.Substring(0, Index);
                 Trim = Lower.Trim();
                 Parameter = Command.Substring(Index).TrimEnd().TrimStart();
             }
-            if (Trim == "gc")
+            switch (Trim)
             {
+            case "gc":
                 Clean();
                 if (Channel != null)
                 {
                     Channel.SendMessageAsync(Channel?.GetSettings().GetLanguage().GetEntry("Global:GC_Complete"));
                 }
-            }
-            else if (Trim == "quit" || Trim == "exit" || Trim == "shutdown")
-            {
+                break;
+            case "quit":
+            case "exit":
+            case "shutdown":
                 if (Channel != null)
                 {
                     Channel.SendMessageAsync(Channel?.GetSettings().GetLanguage().GetEntry("Global:Shutdown")).Wait();
                 }
                 Global.Stop();
                 Environment.Exit(3);
-            }
-            else if (Trim == "reload")
-            {
+                break;
+            case "reload":
                 if (Channel != null)
                 {
                     Channel.SendMessageAsync(Channel?.GetSettings().GetLanguage().GetEntry("Global:Reload")).Wait();
                 }
                 Reload(Channel);
-            }
-            else if (Trim == "restart")
-            {
+                break;
+            case "restart":
                 Global.Stop();
                 Process.GetCurrentProcess().Kill();
-            }
-            else if (Trim == "update")
-            {
+                break;
+            case "update":
                 Update();
-            }
-            else if (Trim == "noupdatefound")
-            {
+                break;
+            case "noupdatefound":
                 if (UpdateChannel != null)
                 {
                     UpdateChannel.SendMessageAsync(UpdateChannel?.GetSettings().GetLanguage().GetEntry("Global:No_Update")).Wait();
                 }
-            }
-            else if (Trim == "updatefound")
-            {
+                break;
+            case "updatefound":
                 if (UpdateChannel != null)
                 {
                     UpdateChannel.SendMessageAsync(UpdateChannel?.GetSettings().GetLanguage().GetEntry("Global:Update_Found")).Wait();
                 }
                 Global.Stop();
                 Process.GetCurrentProcess().Kill();
+                break;
             }
         }
 
