@@ -18,4 +18,17 @@
     <PackageReference Include="Imgur.API" Version="5.0.0-beta1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0-rc.2.20475.5" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="WelcomeBannerResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WelcomeBannerResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="WelcomeBannerResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WelcomeBannerResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

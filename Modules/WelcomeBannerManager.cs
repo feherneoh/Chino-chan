@@ -23,17 +23,30 @@ namespace Chino_chan.Modules
         private Size DefaultAvatarSize { get; set; }
         private Point DefaultTextPosition { get; set; }
         private bool DefaultCircularAvatar { get; set; }
-        
+
+        private static readonly string ServerBannerPath = Path.Combine("Data", "Resources", "ServerBanners");
+        private static readonly string DefaultFramePath = Path.Combine(ServerBannerPath, "default-frame.png");
+        private static readonly string DefaultBackgroundPath = Path.Combine(ServerBannerPath, "default-background.png");
+        private static readonly string DefaultFontPath = Path.Combine(ServerBannerPath, "default-font.ttf");
+
         public WelcomeBannerManager()
         {
+            Directory.CreateDirectory(ServerBannerPath);
+            if (!File.Exists(DefaultFramePath))
+                File.WriteAllBytes(DefaultFramePath, WelcomeBannerResources.default_frame);
+            if (!File.Exists(DefaultBackgroundPath))
+                File.WriteAllBytes(DefaultBackgroundPath, WelcomeBannerResources.default_background);
+            if (!File.Exists(DefaultFontPath))
+                File.WriteAllBytes(DefaultFontPath, WelcomeBannerResources.default_font);
+
             Banners = new Dictionary<ulong, WelcomeBanner>();
 
             Logger.Log(LogType.WelcomeBanner, ConsoleColor.Magenta, "Load", "Loading default resources...");
-            DefaultFrame = new Bitmap(System.Drawing.Image.FromFile("Data/Resources/ServerBanners/default-frame.png"));
-            DefaultBackground = new Bitmap(System.Drawing.Image.FromFile("Data/Resources/ServerBanners/default-background.png"));
+            DefaultFrame = new Bitmap(System.Drawing.Image.FromFile(DefaultFramePath));
+            DefaultBackground = new Bitmap(System.Drawing.Image.FromFile(DefaultBackgroundPath));
 
             PrivateFontCollection collection = new PrivateFontCollection();
-            collection.AddFontFile("Data/Resources/ServerBanners/default-font.ttf"); // HAN_NOM_B
+            collection.AddFontFile(DefaultFontPath); // HAN_NOM_B
             DefaultFontFamily = collection.Families[0];
             DefaultFontSize = 21;
 
@@ -44,7 +57,7 @@ namespace Chino_chan.Modules
             Logger.Log(LogType.WelcomeBanner, ConsoleColor.Magenta, "Load", "Default resources loaded!");
 
             Logger.Log(LogType.WelcomeBanner, ConsoleColor.Magenta, "Load", "Loading Server configurations...");
-            IEnumerable<string> serverFolders = Directory.EnumerateDirectories("Data/Resources/ServerBanners");
+            IEnumerable<string> serverFolders = Directory.EnumerateDirectories(ServerBannerPath);
             foreach (string folder in serverFolders)
             {
                 IEnumerable<string> jsonFiles = Directory.EnumerateFiles(folder, "*.json");
