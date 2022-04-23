@@ -27,7 +27,7 @@ namespace Chino_chan
             Watcher.Changed += (sender, args) =>
             {
                 Watcher.EnableRaisingEvents = false;
-                Settings = SaveManager.LoadSettings<Dictionary<ulong, GuildSetting>>(GuildSettingsPath);
+                Settings = File.Exists(GuildSettingsPath) ? SaveManager.LoadSettings<Dictionary<ulong, GuildSetting>>(GuildSettingsPath) ?? Settings : Settings;
                 Watcher.EnableRaisingEvents = true;
             };
             Load();
@@ -41,7 +41,7 @@ namespace Chino_chan
         }
         private void Load()
         {
-            Settings = SaveManager.LoadSettings<Dictionary<ulong, GuildSetting>>(GuildSettingsPath);
+            Settings = SaveManager.LoadSettings<Dictionary<ulong, GuildSetting>>(GuildSettingsPath) ?? new Dictionary<ulong, GuildSetting>();
 
             if (Settings.Count != 0)
             {
